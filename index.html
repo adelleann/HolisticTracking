@@ -205,117 +205,136 @@
             flex-wrap: wrap;
         }
 
-        .weekly-grid {
+        .last28-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 16px;
         }
 
-        .weekly-card {
+        .last28-card {
             background-color: #E8E0D4;
             padding: 16px;
             border-radius: 12px;
             border: 1px solid rgba(0,0,0,0.1);
         }
 
-        .weekly-title {
+        .last28-title {
             font-weight: 500;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
+            text-align: center;
         }
 
-        .week-days {
+        .days-28-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
+            grid-template-rows: repeat(4, 1fr);
+            gap: 3px;
         }
 
-        .week-day {
+        .day-28-box {
             width: 32px;
-            height: 32px;
+            height: 55px;
             border-radius: 4px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 0.75rem;
+            font-size: 0.6rem;
             border: 1px solid rgba(0,0,0,0.1);
-            font-weight: 500;
-        }
-
-        .monthly-calendar {
-            background: white;
-            padding: 24px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .month-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 16px;
-        }
-
-        .calendar-header {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-
-        .calendar-header-day {
+            padding: 2px;
             text-align: center;
-            font-weight: 500;
-            color: #6B7280;
-            padding: 8px;
-        }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
-        }
-
-        .calendar-day {
-            min-height: 80px;
-            padding: 8px;
-            border: 1px solid #E5E7EB;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
+            line-height: 1;
             background: white;
         }
 
-        .calendar-day:hover {
-            background: #F9FAFB;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .calendar-day.other-month {
-            background: #F3F4F6;
-            color: #9CA3AF;
-        }
-
-        .calendar-day.today {
-            border: 2px solid #3B82F6;
-            background: #EBF8FF;
+        .day-letter {
+            font-weight: 600;
+            margin-bottom: 1px;
         }
 
         .day-number {
-            font-size: 0.875rem;
-            margin-bottom: 4px;
-            font-weight: 500;
+            font-size: 0.55rem;
+            margin-bottom: 1px;
         }
 
         .day-moon {
-            text-align: center;
-            font-size: 0.75rem;
-            margin-bottom: 2px;
+            font-size: 0.6rem;
+            margin-bottom: 1px;
         }
 
-        .day-completion {
-            font-size: 0.75rem;
-            color: #6B7280;
+        .day-value {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .last28-by-date-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .date-card {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .date-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .date-card-header {
             text-align: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .date-card-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #374151;
+        }
+
+        .date-card-moon {
+            font-size: 1.2rem;
+            margin: 4px 0;
+        }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .activity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+            font-size: 0.8rem;
+        }
+
+        .activity-name {
+            color: #6B7280;
+            flex: 1;
+        }
+
+        .activity-value {
+            font-weight: 600;
+            color: #374151;
+            min-width: 40px;
+            text-align: right;
+        }
+
+        .today-card {
+            border: 2px solid #3B82F6;
+            background: #EBF8FF;
         }
 
         .export-section {
@@ -397,12 +416,12 @@
                 align-items: flex-start;
             }
 
-            .weekly-grid {
+            .last28-grid {
                 grid-template-columns: 1fr;
             }
 
-            .calendar-day {
-                min-height: 60px;
+            .last28-by-date-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -423,16 +442,16 @@
             </div>
             <div class="view-buttons">
                 <button class="view-btn active" onclick="setView('daily')">📅 Daily</button>
-                <button class="view-btn" onclick="setView('weekly')">📊 Weekly</button>
-                <button class="view-btn" onclick="setView('monthly')">📈 Monthly</button>
+                <button class="view-btn" onclick="setView('last28')">📊 Last 28 Days</button>
+                <button class="view-btn" onclick="setView('last28ByDate')">📈 Last 28 Days by Date</button>
             </div>
         </div>
 
         <div id="successMessage" class="success-message">Data saved automatically!</div>
 
         <div id="dailyView" class="daily-grid"></div>
-        <div id="weeklyView" class="weekly-grid hidden"></div>
-        <div id="monthlyView" class="monthly-calendar hidden"></div>
+        <div id="last28View" class="last28-grid hidden"></div>
+        <div id="last28ByDateView" class="last28-by-date-grid hidden"></div>
 
         <div class="export-section">
             <h3 style="margin-bottom: 12px;">💾 Data Management</h3>
@@ -468,15 +487,6 @@
             { key: 'bowelMovement', label: 'Bowel Movement', type: 'boolean' },
             { key: 'pain', label: 'Pain', type: 'scale', scale: 10 }
         ];
-
-        const colors = {
-            sage: '#C4D4B0',
-            mint: '#A8C4B4', 
-            cream: '#E8E0D4',
-            blush: '#E8D4D4',
-            peach: '#E8C4A8',
-            orange: '#E8B498'
-        };
 
         function loadData() {
             try {
@@ -564,8 +574,8 @@
             event.target.classList.add('active');
             
             document.getElementById('dailyView').classList.toggle('hidden', view !== 'daily');
-            document.getElementById('weeklyView').classList.toggle('hidden', view !== 'weekly');
-            document.getElementById('monthlyView').classList.toggle('hidden', view !== 'monthly');
+            document.getElementById('last28View').classList.toggle('hidden', view !== 'last28');
+            document.getElementById('last28ByDateView').classList.toggle('hidden', view !== 'last28ByDate');
             
             renderCurrentView();
         }
@@ -573,10 +583,10 @@
         function renderCurrentView() {
             if (currentView === 'daily') {
                 renderDailyView();
-            } else if (currentView === 'weekly') {
-                renderWeeklyView();
-            } else if (currentView === 'monthly') {
-                renderMonthlyView();
+            } else if (currentView === 'last28') {
+                renderLast28View();
+            } else if (currentView === 'last28ByDate') {
+                renderLast28ByDateView();
             }
         }
 
@@ -659,117 +669,113 @@
             }).join('');
         }
 
-        function getWeekDates(date) {
-            const week = [];
-            const startOfWeek = new Date(date);
-            startOfWeek.setDate(date.getDate() - date.getDay());
-            
-            for (let i = 0; i < 7; i++) {
-                const day = new Date(startOfWeek);
-                day.setDate(startOfWeek.getDate() + i);
-                week.push(day);
+        function getLast28Days() {
+            const days = [];
+            for (let i = 27; i >= 0; i--) {
+                const day = new Date();
+                day.setDate(day.getDate() - i);
+                days.push(day);
             }
-            return week;
+            return days;
         }
 
-        function getActivityColor(activity, value, hasData) {
-            if (!hasData) return colors.cream;
-            
-            if (activity.type === 'boolean' || activity.type === 'boolean_scale') {
-                return value ? colors.sage : colors.blush;
+        function getDisplayValue(activity, dayData) {
+            if (activity.type === 'boolean') {
+                return dayData[activity.key] ? 'Y' : 'N';
+            } else if (activity.type === 'boolean_scale') {
+                if (dayData[activity.key]) {
+                    const amount = dayData[`${activity.key}Amount`];
+                    return amount !== undefined ? amount : 'Y';
+                }
+                return 'N';
+            } else if (activity.type === 'scale') {
+                const value = dayData[activity.key];
+                return value !== undefined ? value : '-';
+            } else if (activity.type === 'time') {
+                const value = dayData[activity.key];
+                return value !== undefined ? value : '-';
             }
-            
-            if (activity.type === 'scale' || activity.type === 'time') {
-                if (value === 0) return colors.blush;
-                if (value <= 3) return colors.mint;
-                if (value <= 6) return colors.sage;
-                if (value <= 8) return colors.peach;
-                return colors.orange;
-            }
-            
-            return colors.cream;
+            return '-';
         }
 
-        function renderWeeklyView() {
-            const container = document.getElementById('weeklyView');
-            const weekDates = getWeekDates(currentDate);
+        function renderLast28View() {
+            const container = document.getElementById('last28View');
+            const last28Days = getLast28Days();
             
             container.innerHTML = activities.map(activity => {
-                const weekDaysHtml = weekDates.map((date, index) => {
+                const daysHtml = last28Days.map((date, index) => {
                     const dateKey = formatDate(date);
                     const dayData = data[dateKey] || {};
-                    const value = activity.type === 'boolean_scale' ? dayData[activity.key] : dayData[activity.key];
-                    const hasData = dayData[activity.key] !== undefined;
-                    const color = getActivityColor(activity, value, hasData);
+                    const moonPhase = getMoonPhase(date);
+                    
+                    const dayOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'][date.getDay()];
+                    const dayNumber = date.getDate();
+                    const displayValue = getDisplayValue(activity, dayData);
                     
                     return `
-                        <div class="week-day" style="background-color: ${color};">
-                            ${['S', 'M', 'T', 'W', 'T', 'F', 'S'][index]}
+                        <div class="day-28-box">
+                            <div class="day-letter">${dayOfWeek}</div>
+                            <div class="day-number">${dayNumber}</div>
+                            <div class="day-moon">${moonPhase.emoji}</div>
+                            <div class="day-value">${displayValue}</div>
                         </div>
                     `;
                 }).join('');
                 
                 return `
-                    <div class="weekly-card">
-                        <div class="weekly-title">${activity.label}</div>
-                        <div class="week-days">${weekDaysHtml}</div>
+                    <div class="last28-card">
+                        <div class="last28-title">${activity.label}</div>
+                        <div class="days-28-grid">${daysHtml}</div>
                     </div>
                 `;
             }).join('');
         }
 
-        function renderMonthlyView() {
-            const container = document.getElementById('monthlyView');
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
-            const firstDay = new Date(year, month, 1);
-            const lastDay = new Date(year, month + 1, 0);
-            const startDate = new Date(firstDay);
-            startDate.setDate(startDate.getDate() - firstDay.getDay());
+        function renderLast28ByDateView() {
+            const container = document.getElementById('last28ByDateView');
+            const last28Days = getLast28Days();
+            const today = formatDate(new Date());
             
-            const days = [];
-            const current = new Date(startDate);
+            const sortedDays = [...last28Days].reverse();
             
-            while (current <= lastDay || current.getDay() !== 0) {
-                days.push(new Date(current));
-                current.setDate(current.getDate() + 1);
-            }
-
-            const monthTitle = currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-            
-            const calendarDaysHtml = days.map(day => {
-                const dateKey = formatDate(day);
+            container.innerHTML = sortedDays.map(date => {
+                const dateKey = formatDate(date);
                 const dayData = data[dateKey] || {};
-                const isCurrentMonth = day.getMonth() === month;
-                const isToday = formatDate(day) === formatDate(new Date());
-                const completedActivities = activities.filter(activity => 
-                    dayData[activity.key] !== undefined
-                ).length;
-                const moonPhase = getMoonPhase(day);
+                const moonPhase = getMoonPhase(date);
+                const isToday = dateKey === today;
+                
+                const dateTitle = date.toLocaleDateString('en-US', { 
+                    weekday: 'short', 
+                    month: 'short', 
+                    day: 'numeric' 
+                });
+                
+                const activitiesHtml = activities.map(activity => {
+                    const displayValue = getDisplayValue(activity, dayData);
+                    const activityLabel = activity.label.length > 15 
+                        ? activity.label.substring(0, 15) + '...' 
+                        : activity.label;
+                    
+                    return `
+                        <div class="activity-item">
+                            <span class="activity-name">${activityLabel}</span>
+                            <span class="activity-value">${displayValue}</span>
+                        </div>
+                    `;
+                }).join('');
                 
                 return `
-                    <div class="calendar-day ${isCurrentMonth ? '' : 'other-month'} ${isToday ? 'today' : ''}"
-                         onclick="currentDate = new Date('${day.toISOString()}'); setView('daily')">
-                        <div class="day-number">${day.getDate()}</div>
-                        ${isCurrentMonth ? `
-                            <div class="day-moon">${moonPhase.emoji}</div>
-                            <div class="day-completion">${completedActivities}/${activities.length}</div>
-                        ` : ''}
+                    <div class="date-card ${isToday ? 'today-card' : ''}" onclick="currentDate = new Date('${date.toISOString()}'); setView('daily')">
+                        <div class="date-card-header">
+                            <div class="date-card-title">${dateTitle}</div>
+                            <div class="date-card-moon">${moonPhase.emoji} ${moonPhase.name}</div>
+                        </div>
+                        <div class="activity-list">
+                            ${activitiesHtml}
+                        </div>
                     </div>
                 `;
             }).join('');
-            
-            container.innerHTML = `
-                <div class="month-title">${monthTitle}</div>
-                <div class="calendar-header">
-                    ${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => 
-                        `<div class="calendar-header-day">${day}</div>`
-                    ).join('')}
-                </div>
-                <div class="calendar-grid">
-                    ${calendarDaysHtml}
-                </div>
-            `;
         }
 
         function exportData() {
@@ -805,7 +811,6 @@
             event.target.value = '';
         }
 
-        // Initialize
         loadData();
         updateHeader();
         renderCurrentView();
