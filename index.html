@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Wellness Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #E8E0D4;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: #C4D4B0;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .date-nav {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-btn {
+            background: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .nav-btn:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .date-info {
+            text-align: center;
+        }
+
+        .date-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .moon-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.875rem;
+        }
+
+        .view-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .view-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: transparent;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .view-btn.active {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .view-btn:not(.active):hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .daily-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .activity-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .activity-label {
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: #374151;
+        }
+
+        .scale-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .scale-numbers {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .scale-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #D1D5DB;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .scale-btn:hover {
+            border-color: #9CA3AF;
+        }
+
+        .scale-btn.active {
+            background: #3B82F6;
+            color: white;
+            border-color: #3B82F6;
+        }
+
+        .boolean-btn {
+            width: 32px;
+            height: 32px;
+            border: 2px solid #D1D5DB;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            font-weight: bold;
+        }
+
+        .boolean-btn:hover {
+            border-color: #9CA3AF;
+        }
+
+        .boolean-btn.active {
+            background: #F8BBD0;
+            border-color: #F48FB1;
+            color: #374151;
+        }
+
+        .time-input {
+            width: 80px;
+            padding: 8px 12px;
+            border: 1px solid #D1D5DB;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+
+        .time-input:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .boolean-scale-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .amount-section {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .weekly-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        .weekly-card {
+            background-color: #E8E0D4;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .weekly-title {
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .week-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+
+        .week-day {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            border: 1px solid rgba(0,0,0,0.1);
+            font-weight: 500;
+        }
+
+        .monthly-calendar {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .month-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .calendar-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .calendar-header-day {
+            text-align: center;
+            font-weight: 500;
+            color: #6B7280;
+            padding: 8px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+
+        .calendar-day {
+            min-height: 80px;
+            padding: 8px;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .calendar-day:hover {
+            background: #F9FAFB;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .calendar-day.other-month {
+            background: #F3F4F6;
+            color: #9CA3AF;
+        }
+
+        .calendar-day.today {
+            border: 2px solid #3B82F6;
+            background: #EBF8FF;
+        }
+
+        .day-number {
+            font-size: 0.875rem;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .day-moon {
+            text-align: center;
+            font-size: 0.75rem;
+            margin-bottom: 2px;
+        }
+
+        .day-completion {
+            font-size: 0.75rem;
+            color: #6B7280;
+            text-align: center;
+        }
+
+        .export-section {
+            margin-top: 20px;
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .export-btn {
+            background: #4F46E5;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 0 8px;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .export-btn:hover {
+            background: #4338CA;
+            transform: translateY(-1px);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .success-message {
+            background: #D1FAE5;
+            border: 1px solid #10B981;
+            color: #065F46;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .success-message.show {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .date-nav {
+                order: 1;
+            }
+            
+            .view-buttons {
+                order: 2;
+                justify-content: center;
+            }
+            
+            .daily-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .scale-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .boolean-scale-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .weekly-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .calendar-day {
+                min-height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="date-nav">
+                <button class="nav-btn" onclick="changeDate(-1)">‹ Previous</button>
+                <div class="date-info">
+                    <div class="date-title" id="dateTitle"></div>
+                    <div class="moon-info">
+                        <span id="moonEmoji"></span>
+                        <span id="moonName"></span>
+                    </div>
+                </div>
+                <button class="nav-btn" onclick="changeDate(1)">Next ›</button>
+            </div>
+            <div class="view-buttons">
+                <button class="view-btn active" onclick="setView('daily')">📅 Daily</button>
+                <button class="view-btn" onclick="setView('weekly')">📊 Weekly</button>
+                <button class="view-btn" onclick="setView('monthly')">📈 Monthly</button>
+            </div>
+        </div>
+
+        <div id="successMessage" class="success-message">Data saved automatically!</div>
+
+        <div id="dailyView" class="daily-grid"></div>
+        <div id="weeklyView" class="weekly-grid hidden"></div>
+        <div id="monthlyView" class="monthly-calendar hidden"></div>
+
+        <div class="export-section">
+            <h3 style="margin-bottom: 12px;">💾 Data Management</h3>
+            <p style="margin-bottom: 16px; color: #6B7280;">Your data saves automatically. Use these buttons to backup or restore.</p>
+            <button class="export-btn" onclick="exportData()">📥 Export Data</button>
+            <button class="export-btn" onclick="document.getElementById('fileInput').click()">📤 Import Data</button>
+            <input type="file" id="fileInput" class="file-input" accept=".json" onchange="importData(event)">
+        </div>
+    </div>
+
+    <script>
+        let currentDate = new Date();
+        let currentView = 'daily';
+        let data = {};
+
+        const activities = [
+            { key: 'meditation', label: 'Meditation', type: 'time', unit: 'minutes' },
+            { key: 'movement', label: 'Movement', type: 'time', unit: 'minutes' },
+            { key: 'handCreation', label: 'Hand Creation', type: 'boolean' },
+            { key: 'wine', label: 'Wine', type: 'boolean_scale', scale: 10 },
+            { key: 'wholeFoods', label: 'Whole Foods', type: 'boolean' },
+            { key: 'moodWaking', label: 'Mood Upon Waking', type: 'scale', scale: 10 },
+            { key: 'moodBedtime', label: 'Mood at Bedtime', type: 'scale', scale: 10 },
+            { key: 'waterIntake', label: 'Water Intake', type: 'scale', scale: 10 },
+            { key: 'dairySugar', label: 'Dairy/Sugar Beyond Need', type: 'boolean' },
+            { key: 'sleepQuality', label: 'Sleep Prior Night', type: 'scale', scale: 10 },
+            { key: 'outsideGrounding', label: 'Outside Grounding', type: 'boolean' },
+            { key: 'harveyTime', label: 'Harvey Time', type: 'boolean' },
+            { key: 'eatingOut', label: 'Eating Out', type: 'boolean' },
+            { key: 'cookedMeal', label: 'Cooked Meal', type: 'boolean' },
+            { key: 'stayedInHeart', label: 'Stayed in My Heart', type: 'scale', scale: 10 },
+            { key: 'groupActivity', label: 'Group Activity', type: 'boolean' },
+            { key: 'bowelMovement', label: 'Bowel Movement', type: 'boolean' },
+            { key: 'pain', label: 'Pain', type: 'scale', scale: 10 }
+        ];
+
+        const colors = {
+            sage: '#C4D4B0',
+            mint: '#A8C4B4', 
+            cream: '#E8E0D4',
+            blush: '#E8D4D4',
+            peach: '#E8C4A8',
+            orange: '#E8B498'
+        };
+
+        function loadData() {
+            try {
+                const saved = localStorage.getItem('wellnessTrackerData');
+                if (saved) {
+                    data = JSON.parse(saved);
+                }
+            } catch(e) {
+                console.warn('Could not load saved data:', e);
+            }
+        }
+
+        function saveData() {
+            try {
+                localStorage.setItem('wellnessTrackerData', JSON.stringify(data));
+                showSuccessMessage();
+            } catch(e) {
+                console.warn('Could not save data:', e);
+            }
+        }
+
+        function showSuccessMessage() {
+            const msg = document.getElementById('successMessage');
+            msg.classList.add('show');
+            setTimeout(() => {
+                msg.classList.remove('show');
+            }, 2000);
+        }
+
+        function formatDate(date) {
+            return date.toISOString().split('T')[0];
+        }
+
+        function getMoonPhase(date) {
+            const moonCycle = 29.53058867;
+            const knownNewMoon = new Date('2000-01-06');
+            const daysSince = (date - knownNewMoon) / (1000 * 60 * 60 * 24);
+            const phase = ((daysSince % moonCycle) + moonCycle) % moonCycle;
+            
+            if (phase < 1.84566) return { name: 'New Moon', emoji: '🌑' };
+            if (phase < 5.53699) return { name: 'Waxing Crescent', emoji: '🌒' };
+            if (phase < 9.22831) return { name: 'First Quarter', emoji: '🌓' };
+            if (phase < 12.91963) return { name: 'Waxing Gibbous', emoji: '🌔' };
+            if (phase < 16.61096) return { name: 'Full Moon', emoji: '🌕' };
+            if (phase < 20.30228) return { name: 'Waning Gibbous', emoji: '🌖' };
+            if (phase < 23.99361) return { name: 'Last Quarter', emoji: '🌗' };
+            return { name: 'Waning Crescent', emoji: '🌘' };
+        }
+
+        function updateData(activityKey, value) {
+            const dateKey = formatDate(currentDate);
+            if (!data[dateKey]) data[dateKey] = {};
+            data[dateKey][activityKey] = value;
+            saveData();
+        }
+
+        function getCurrentData() {
+            const dateKey = formatDate(currentDate);
+            return data[dateKey] || {};
+        }
+
+        function updateHeader() {
+            const moonPhase = getMoonPhase(currentDate);
+            document.getElementById('dateTitle').textContent = currentDate.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            document.getElementById('moonEmoji').textContent = moonPhase.emoji;
+            document.getElementById('moonName').textContent = moonPhase.name;
+        }
+
+        function changeDate(days) {
+            const newDate = new Date(currentDate);
+            newDate.setDate(newDate.getDate() + days);
+            currentDate = newDate;
+            updateHeader();
+            renderCurrentView();
+        }
+
+        function setView(view) {
+            currentView = view;
+            document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.getElementById('dailyView').classList.toggle('hidden', view !== 'daily');
+            document.getElementById('weeklyView').classList.toggle('hidden', view !== 'weekly');
+            document.getElementById('monthlyView').classList.toggle('hidden', view !== 'monthly');
+            
+            renderCurrentView();
+        }
+
+        function renderCurrentView() {
+            if (currentView === 'daily') {
+                renderDailyView();
+            } else if (currentView === 'weekly') {
+                renderWeeklyView();
+            } else if (currentView === 'monthly') {
+                renderMonthlyView();
+            }
+        }
+
+        function renderDailyView() {
+            const container = document.getElementById('dailyView');
+            const currentData = getCurrentData();
+            
+            container.innerHTML = activities.map(activity => {
+                let inputHtml = '';
+                
+                if (activity.type === 'boolean') {
+                    const checked = currentData[activity.key] || false;
+                    inputHtml = `
+                        <button class="boolean-btn ${checked ? 'active' : ''}" 
+                                onclick="updateData('${activity.key}', ${!checked}); renderCurrentView()">
+                            ${checked ? '✓' : ''}
+                        </button>
+                    `;
+                } else if (activity.type === 'scale') {
+                    const value = currentData[activity.key];
+                    inputHtml = `
+                        <div class="scale-container">
+                            <span style="font-size: 0.875rem; color: #6B7280; width: 32px;">0</span>
+                            <div class="scale-numbers">
+                                ${Array.from({length: 11}, (_, i) => `
+                                    <button class="scale-btn ${value === i ? 'active' : ''}" 
+                                            onclick="updateData('${activity.key}', ${i}); renderCurrentView()">
+                                        ${i}
+                                    </button>
+                                `).join('')}
+                            </div>
+                            <span style="font-size: 0.875rem; color: #6B7280; width: 32px;">10</span>
+                        </div>
+                    `;
+                } else if (activity.type === 'time') {
+                    const value = currentData[activity.key] || '';
+                    inputHtml = `
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <input type="number" class="time-input" min="0" value="${value}" 
+                                   placeholder="0" onchange="updateData('${activity.key}', parseInt(this.value) || 0)">
+                            <span style="font-size: 0.875rem; color: #6B7280;">${activity.unit}</span>
+                        </div>
+                    `;
+                } else if (activity.type === 'boolean_scale') {
+                    const boolValue = currentData[activity.key] || false;
+                    const scaleValue = currentData[`${activity.key}Amount`];
+                    inputHtml = `
+                        <div class="boolean-scale-container">
+                            <button class="boolean-btn ${boolValue ? 'active' : ''}" 
+                                    onclick="updateData('${activity.key}', ${!boolValue}); renderCurrentView()">
+                                ${boolValue ? '✓' : ''}
+                            </button>
+                            ${boolValue ? `
+                                <div class="amount-section">
+                                    <span style="font-size: 0.875rem; color: #6B7280;">Amount:</span>
+                                    <div class="scale-container">
+                                        <span style="font-size: 0.875rem; color: #6B7280;">0</span>
+                                        <div class="scale-numbers">
+                                            ${Array.from({length: 11}, (_, i) => `
+                                                <button class="scale-btn ${scaleValue === i ? 'active' : ''}" 
+                                                        onclick="updateData('${activity.key}Amount', ${i}); renderCurrentView()">
+                                                    ${i}
+                                                </button>
+                                            `).join('')}
+                                        </div>
+                                        <span style="font-size: 0.875rem; color: #6B7280;">10</span>
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+                
+                return `
+                    <div class="activity-card">
+                        <div class="activity-label">${activity.label}</div>
+                        ${inputHtml}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getWeekDates(date) {
+            const week = [];
+            const startOfWeek = new Date(date);
+            startOfWeek.setDate(date.getDate() - date.getDay());
+            
+            for (let i = 0; i < 7; i++) {
+                const day = new Date(startOfWeek);
+                day.setDate(startOfWeek.getDate() + i);
+                week.push(day);
+            }
+            return week;
+        }
+
+        function getActivityColor(activity, value, hasData) {
+            if (!hasData) return colors.cream;
+            
+            if (activity.type === 'boolean' || activity.type === 'boolean_scale') {
+                return value ? colors.sage : colors.blush;
+            }
+            
+            if (activity.type === 'scale' || activity.type === 'time') {
+                if (value === 0) return colors.blush;
+                if (value <= 3) return colors.mint;
+                if (value <= 6) return colors.sage;
+                if (value <= 8) return colors.peach;
+                return colors.orange;
+            }
+            
+            return colors.cream;
+        }
+
+        function renderWeeklyView() {
+            const container = document.getElementById('weeklyView');
+            const weekDates = getWeekDates(currentDate);
+            
+            container.innerHTML = activities.map(activity => {
+                const weekDaysHtml = weekDates.map((date, index) => {
+                    const dateKey = formatDate(date);
+                    const dayData = data[dateKey] || {};
+                    const value = activity.type === 'boolean_scale' ? dayData[activity.key] : dayData[activity.key];
+                    const hasData = dayData[activity.key] !== undefined;
+                    const color = getActivityColor(activity, value, hasData);
+                    
+                    return `
+                        <div class="week-day" style="background-color: ${color};">
+                            ${['S', 'M', 'T', 'W', 'T', 'F', 'S'][index]}
+                        </div>
+                    `;
+                }).join('');
+                
+                return `
+                    <div class="weekly-card">
+                        <div class="weekly-title">${activity.label}</div>
+                        <div class="week-days">${weekDaysHtml}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderMonthlyView() {
+            const container = document.getElementById('monthlyView');
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDate = new Date(firstDay);
+            startDate.setDate(startDate.getDate() - firstDay.getDay());
+            
+            const days = [];
+            const current = new Date(startDate);
+            
+            while (current <= lastDay || current.getDay() !== 0) {
+                days.push(new Date(current));
+                current.setDate(current.getDate() + 1);
+            }
+
+            const monthTitle = currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            
+            const calendarDaysHtml = days.map(day => {
+                const dateKey = formatDate(day);
+                const dayData = data[dateKey] || {};
+                const isCurrentMonth = day.getMonth() === month;
+                const isToday = formatDate(day) === formatDate(new Date());
+                const completedActivities = activities.filter(activity => 
+                    dayData[activity.key] !== undefined
+                ).length;
+                const moonPhase = getMoonPhase(day);
+                
+                return `
+                    <div class="calendar-day ${isCurrentMonth ? '' : 'other-month'} ${isToday ? 'today' : ''}"
+                         onclick="currentDate = new Date('${day.toISOString()}'); setView('daily')">
+                        <div class="day-number">${day.getDate()}</div>
+                        ${isCurrentMonth ? `
+                            <div class="day-moon">${moonPhase.emoji}</div>
+                            <div class="day-completion">${completedActivities}/${activities.length}</div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = `
+                <div class="month-title">${monthTitle}</div>
+                <div class="calendar-header">
+                    ${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => 
+                        `<div class="calendar-header-day">${day}</div>`
+                    ).join('')}
+                </div>
+                <div class="calendar-grid">
+                    ${calendarDaysHtml}
+                </div>
+            `;
+        }
+
+        function exportData() {
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `wellness-tracker-data-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        data = { ...data, ...importedData };
+                        saveData();
+                        renderCurrentView();
+                        alert('Data imported successfully!');
+                    } catch (error) {
+                        alert('Error importing data. Please check the file format.');
+                    }
+                };
+                reader.readAsText(file);
+            }
+            event.target.value = '';
+        }
+
+        // Initialize
+        loadData();
+        updateHeader();
+        renderCurrentView();
+    </script>
+</body>
+</html>
